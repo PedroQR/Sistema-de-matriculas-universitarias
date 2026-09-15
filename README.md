@@ -1,7 +1,7 @@
 # Sistema de Matrículas Universitárias
 
 Projeto de software desenvolvido para a disciplina **Projeto de Software (Laboratório de Desenvolvimento de Software)** do curso de Engenharia de Software da **PUC Minas**.
-
+Paticipantes: Caio Santos e Anthony Santos
 ---
 
 ## 📌 Sobre o Projeto
