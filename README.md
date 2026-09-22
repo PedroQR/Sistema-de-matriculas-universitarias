@@ -44,6 +44,84 @@ O **Sistema de Matrículas** visa automatizar e gerenciar o processo de matrícu
 8. **UC08 - Notificar Cobrança**: Processo automatizado que notifica o Sistema de Cobranças sobre a efetivação da matrícula do aluno.
 9. **UC09 - Processar Validação de Disciplinas**: Regra executada ao final do período de matrícula para ativar turmas com pelo menos 3 alunos ou cancelar turmas com adesão insuficiente.
 
+#### Diagrama de Casos de Uso (UML)
+
+```mermaid
+flowchart LR
+    %% Atores Primários
+    subgraph Atores["Atores Primários"]
+        Usuario["👤 Usuário<br/>«abstrato»"]
+        Secretaria["🏛️ Secretaria"]
+        Aluno["🎓 Aluno"]
+        Professor["👨‍🏫 Professor"]
+    end
+
+    %% Generalização dos Atores
+    Secretaria -->|especializa| Usuario
+    Aluno -->|especializa| Usuario
+    Professor -->|especializa| Usuario
+
+    %% Fronteira do Sistema
+    subgraph Sistema[" Sistema de Matrículas Universitárias "]
+        UC01(["UC01: Efetuar Login"])
+        UC02(["UC02: Gerar Currículo do Semestre"])
+        UC03(["UC03: Manter Cursos e Disciplinas"])
+        UC04(["UC04: Manter Professores e Alunos"])
+        UC05(["UC05: Matricular em Disciplinas"])
+        UC06(["UC06: Cancelar Matrícula"])
+        UC07(["UC07: Consultar Alunos Matriculados"])
+        UC08(["UC08: Notificar Sistema de Cobrança"])
+        UC09(["UC09: Processar Fechamento de Disciplinas"])
+    end
+
+    %% Atores Secundários e Gatilhos
+    subgraph AtoresSecundarios["Atores Secundários / Eventos"]
+        SistemaCobranca["🏦 Sistema de Cobranças<br/>«sistema externo»"]
+        Temporizador["⏰ Fim do Prazo de Matrícula<br/>«evento temporal»"]
+    end
+
+    %% Associações Usuário
+    Usuario --- UC01
+
+    %% Associações Secretaria
+    Secretaria --- UC02
+    Secretaria --- UC03
+    Secretaria --- UC04
+
+    %% Associações Aluno
+    Aluno --- UC05
+    Aluno --- UC06
+
+    %% Associações Professor
+    Professor --- UC07
+
+    %% Relacionamentos de Casos de Uso
+    UC05 -. "<<include>>" .-> UC08
+    UC08 --> SistemaCobranca
+
+    Temporizador --> UC09
+
+    %% Regras de Negócio e Notas
+    NotaUC09["<b>Regra de Negócio (UC09):</b><br/>• Inscritos &lt; 3: Cancela disciplina<br/>• 3 &le; Inscritos &le; 60: Ativa disciplina"]
+    NotaUC05["<b>Regra de Negócio (UC05):</b><br/>• Máx. 4 obrigatórias<br/>• Máx. 2 optativas<br/>• Máx. 60 alunos/turma"]
+
+    NotaUC09 -.-> UC09
+    NotaUC05 -.-> UC05
+
+    %% Estilos
+    classDef actorStyle fill:#eef2ff,stroke:#4338ca,stroke-width:2px,color:#1e1b4b;
+    classDef usecaseStyle fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+    classDef externalStyle fill:#fef3c7,stroke:#b45309,stroke-width:2px,color:#78350f;
+    classDef noteStyle fill:#fffbeb,stroke:#d97706,stroke-dasharray: 4 4,color:#78350f,font-size:11px;
+
+    class Usuario,Secretaria,Aluno,Professor actorStyle;
+    class UC01,UC02,UC03,UC04,UC05,UC06,UC07,UC08,UC09 usecaseStyle;
+    class SistemaCobranca,Temporizador externalStyle;
+    class NotaUC09,NotaUC05 noteStyle;
+```
+
+> Para mais detalhes sobre as interações e matriz de rastreabilidade, veja [docs/diagrama-de-casos-de-uso.md](docs/diagrama-de-casos-de-uso.md).
+
 ---
 
 ## 📝 Histórias de Usuário (User Stories)
