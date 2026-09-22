@@ -111,3 +111,159 @@ O **Sistema de Matrículas** visa automatizar e gerenciar o processo de matrícu
 
 - **Critérios de Aceite**:
   - O professor visualizará apenas as disciplinas vinculadas ao seu cadastro.
+
+---
+
+## 📐 Projeto Estrutural (Diagrama de Classes)
+
+Diagrama de Classes modelado a partir dos Casos de Uso (UC01 a UC09) e regras de negócio do sistema:
+
+```mermaid
+classDiagram
+    direction TB
+
+    class Usuario {
+        <<abstract>>
+        -id: Long
+        -nome: String
+        -email: String
+        -login: String
+        -senha: String
+        +autenticar(login: String, senha: String) boolean
+        +getId() Long
+        +getNome() String
+    }
+
+    class Aluno {
+        -matricula: String
+        -inscricoes: List~Inscricao~
+        +matricular(disciplina: Disciplina, tipo: TipoInscricao) boolean
+        +cancelarMatricula(disciplina: Disciplina) boolean
+        +getInscricoesAtivas() List~Inscricao~
+        +getQtdObrigatoriasAtivas() int
+        +getQtdOptativasAtivas() int
+    }
+
+    class Professor {
+        -registroDocente: String
+        -disciplinasLecionadas: List~Disciplina~
+        +consultarAlunos(disciplina: Disciplina) List~Aluno~
+        +vincularDisciplina(disciplina: Disciplina) void
+    }
+
+    class Secretaria {
+        -setor: String
+        +gerarCurriculoSemestre(semestre: String, ano: int) CurriculoSemestre
+        +cadastrarCurso(nome: String, creditos: int) Curso
+        +cadastrarDisciplina(nome: String, creditos: int, curso: Curso) Disciplina
+        +cadastrarProfessor(nome: String, email: String, registro: String) Professor
+        +cadastrarAluno(nome: String, email: String, matricula: String) Aluno
+    }
+
+    Usuario <|-- Aluno
+    Usuario <|-- Professor
+    Usuario <|-- Secretaria
+
+    class Curso {
+        -id: Long
+        -nome: String
+        -totalCreditos: int
+        -disciplinas: List~Disciplina~
+        +adicionarDisciplina(disciplina: Disciplina) void
+        +getDisciplinas() List~Disciplina~
+    }
+
+    class CurriculoSemestre {
+        -id: Long
+        -semestre: String
+        -ano: int
+        -periodoMatriculaAberto: boolean
+        -disciplinasOfertadas: List~Disciplina~
+        +abrirPeriodoMatricula() void
+        +encerrarPeriodoMatricula() void
+        +adicionarOfertaDisciplina(disciplina: Disciplina) void
+        +processarFechamentoDisciplinas() void
+    }
+
+    class Disciplina {
+        -codigo: String
+        -nome: String
+        -creditos: int
+        -capacidadeMaxima: int
+        -capacidadeMinima: int
+        -status: StatusDisciplina
+        -curso: Curso
+        -professor: Professor
+        -inscricoes: List~Inscricao~
+        +adicionarInscricao(inscricao: Inscricao) boolean
+        +removerInscricao(aluno: Aluno) boolean
+        +isVagasDisponiveis() boolean
+        +getQtdInscritosAtivos() int
+        +processarStatusFechamento() void
+        +getAlunosMatriculados() List~Aluno~
+    }
+
+    class Inscricao {
+        -id: Long
+        -dataInscricao: LocalDateTime
+        -tipo: TipoInscricao
+        -status: StatusInscricao
+        -aluno: Aluno
+        -disciplina: Disciplina
+        +cancelar() void
+        +getStatus() StatusInscricao
+        +getTipo() TipoInscricao
+    }
+
+    class ServicoNotificacaoCobranca {
+        <<interface>>
+        +notificarMatricula(aluno: Aluno, disciplina: Disciplina) boolean
+    }
+
+    class SistemaCobrancaAdapter {
+        -urlApi: String
+        -apiKey: String
+        +notificarMatricula(aluno: Aluno, disciplina: Disciplina) boolean
+    }
+
+    ServicoNotificacaoCobranca <|.. SistemaCobrancaAdapter
+
+    class StatusDisciplina {
+        <<enumeration>>
+        ABERTA
+        ATIVA
+        CANCELADA
+    }
+
+    class TipoInscricao {
+        <<enumeration>>
+        OBRIGATORIA
+        OPTATIVA
+    }
+
+    class StatusInscricao {
+        <<enumeration>>
+        ATIVA
+        CANCELADA
+    }
+
+    Curso "1" *-- "0..*" Disciplina : contém
+    CurriculoSemestre "1" o-- "0..*" Disciplina : oferta
+    Professor "0..1" --> "0..*" Disciplina : leciona
+    Disciplina "1" --> "0..1" Professor : atribuída a
+
+    Aluno "1" --> "0..*" Inscricao : realiza
+    Inscricao "*" --> "1" Aluno : pertence a
+    Disciplina "1" --> "0..*" Inscricao : possui
+    Inscricao "*" --> "1" Disciplina : vinculada a
+
+    Disciplina --> StatusDisciplina : possui status
+    Inscricao --> TipoInscricao : classificada como
+    Inscricao --> StatusInscricao : estado atual
+
+    Aluno ..> ServicoNotificacaoCobranca : aciona (UC08)
+    CurriculoSemestre ..> Disciplina : processa fechamento (UC09)
+```
+
+> Para a documentação detalhada com a especificação de métodos e relacionamentos, consulte [docs/diagrama-de-classes.md](docs/diagrama-de-classes.md).
+
