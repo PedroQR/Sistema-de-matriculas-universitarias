@@ -1,13 +1,27 @@
-package main.java.br.pucminas.matriculas.model;
+package br.pucminas.matriculas.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa um Aluno no sistema de matrículas (UC05, UC06).
+ * Regras:
+ * - Até 4 disciplinas obrigatórias ativas.
+ * - Até 2 disciplinas optativas ativas.
+ */
 public class Aluno extends Usuario {
     private static final long serialVersionUID = 1L;
 
+    public static final int LIMITE_OBRIGATORIAS = 4;
+    public static final int LIMITE_OPTATIVAS = 2;
+
     private String matricula;
     private List<Inscricao> inscricoes;
+
+    public Aluno() {
+        super();
+        this.inscricoes = new ArrayList<>();
+    }
 
     public Aluno(Long id, String nome, String email, String login, String senha, String matricula) {
         super(id, nome, email, login, senha);
@@ -15,70 +29,118 @@ public class Aluno extends Usuario {
         this.inscricoes = new ArrayList<>();
     }
 
+    /**
+     * Efetua a matrícula do aluno na disciplina informada, validando regras de negócio.
+     */
     public boolean matricular(Disciplina disciplina, TipoInscricao tipo) {
-        if (disciplina == null || tipo == null) return false;
-        if (disciplina.getStatus() != StatusDisciplina.ABERTA) return false;
-        if (!disciplina.isVagasDisponiveis()) return false;
+        if (disciplina == null || tipo == null) {
+            return false;
+        }
+        if (disciplina.getStatus() != StatusDisciplina.ABERTA) {
+            return false;
+        }
+        if (!disciplina.isVagasDisponiveis()) {
+            return false;
+        }
 
-        for (Inscricao i : inscricoes) {
-            if (i.getDisciplina().equals(disciplina) && i.getStatus() == StatusInscricao.ATIVA) {
+        // Verifica se já está matriculado ativamente na disciplina
+        for (Inscricao inscricao : getInscricoesAtivas()) {
+            if (inscricao.getDisciplina().equals(disciplina)) {
                 return false;
             }
         }
 
-        if (tipo == TipoInscricao.OBRIGATORIA && getQtdObrigatoriasAtivas() >= 4) return false;
-        if (tipo == TipoInscricao.OPTATIVA && getQtdOptativasAtivas() >= 2) return false;
+        // Validação dos limites de matrícula
+        if (tipo == TipoInscricao.OBRIGATORIA && getQtdObrigatoriasAtivas() >= LIMITE_OBRIGATORIAS) {
+            return false;
+        }
+        if (tipo == TipoInscricao.OPTATIVA && getQtdOptativasAtivas() >= LIMITE_OPTATIVAS) {
+            return false;
+        }
 
         Inscricao inscricao = new Inscricao(
-                System.currentTimeMillis(),
+                System.currentTimeMillis() + (long)(Math.random() * 1000),
                 this,
                 disciplina,
                 tipo
         );
 
-        if (!disciplina.adicionarInscricao(inscricao)) return false;
+        if (!disciplina.adicionarInscricao(inscricao)) {
+            return false;
+        }
 
         inscricoes.add(inscricao);
         return true;
     }
 
+    /**
+     * Cancela a matrícula em uma disciplina ativa, liberando a vaga imediatamente.
+     */
     public boolean cancelarMatricula(Disciplina disciplina) {
-        for (Inscricao i : inscricoes) {
-            if (i.getDisciplina().equals(disciplina) &&
-                i.getStatus() == StatusInscricao.ATIVA) {
-                i.cancelar();
+        if (disciplina == null) {
+            return false;
+        }
+        for (Inscricao inscricao : inscricoes) {
+            if (inscricao.getDisciplina().equals(disciplina) && inscricao.getStatus() == StatusInscricao.ATIVA) {
+                inscricao.cancelar();
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Retorna apenas as inscrições com status ATIVA.
+     */
     public List<Inscricao> getInscricoesAtivas() {
-        List<Inscricao> resultado = new ArrayList<>();
-        for (Inscricao i : inscricoes) {
-            if (i.getStatus() == StatusInscricao.ATIVA) {
-                resultado.add(i);
+        List<Inscricao> ativas = new ArrayList<>();
+        for (Inscricao inscricao : inscricoes) {
+            if (inscricao.getStatus() == StatusInscricao.ATIVA) {
+                ativas.add(inscricao);
             }
         }
-        return resultado;
+        return ativas;
     }
 
+    /**
+     * Contagem de disciplinas obrigatórias ativas.
+     */
     public int getQtdObrigatoriasAtivas() {
-        int quantidade = 0;
-        for (Inscricao i : getInscricoesAtivas()) {
-            if (i.getTipo() == TipoInscricao.OBRIGATORIA) quantidade++;
+        int count = 0;
+        for (Inscricao inscricao : getInscricoesAtivas()) {
+            if (inscricao.getTipo() == TipoInscricao.OBRIGATORIA) {
+                count++;
+            }
         }
-        return quantidade;
+        return count;
     }
 
+    /**
+     * Contagem de disciplinas optativas ativas.
+     */
     public int getQtdOptativasAtivas() {
-        int quantidade = 0;
-        for (Inscricao i : getInscricoesAtivas()) {
-            if (i.getTipo() == TipoInscricao.OPTATIVA) quantidade++;
+        int count = 0;
+        for (Inscricao inscricao : getInscricoesAtivas()) {
+            if (inscricao.getTipo() == TipoInscricao.OPTATIVA) {
+                count++;
+            }
         }
-        return quantidade;
+        return count;
     }
 
-    public String getMatricula() { return matricula; }
-    public List<Inscricao> getInscricoes() { return inscricoes; }
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+    public List<Inscricao> getInscricoes() {
+        return inscricoes;
+    }
+
+    public void setInscricoes(List<Inscricao> inscricoes) {
+        this.inscricoes = inscricoes;
+    }
 }

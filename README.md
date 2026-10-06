@@ -345,3 +345,65 @@ classDiagram
 
 > Para a documentação detalhada com a especificação de métodos e relacionamentos, consulte [docs/diagrama-de-classes.md](docs/diagrama-de-classes.md).
 
+---
+
+## 💻 Implementação do Protótipo (Sprint 2)
+
+O protótipo do sistema foi implementado em **Java** (JDK 21) cobrindo todos os requisitos comportamentais e estruturais modelados (UC01 a UC09):
+
+### 1. Funcionalidades Implementadas
+- **UC01 - Autenticação**: Login por credenciais (`login`/`senha`) para Secretaria, Aluno e Professor com validação de permissões.
+- **UC02 - Gerar Currículo do Semestre**: Criação de semestres letivos e controle de abertura/encerramento do período de matrícula.
+- **UC03 - Manter Cursos e Disciplinas**: Cadastro, listagem e remoção de cursos e disciplinas, com atribuição de docentes.
+- **UC04 - Manter Professores e Alunos**: Gerenciamento cadastral de docentes e discentes.
+- **UC05 - Efetuar Matrícula**: Regras de negócio rigorosamente aplicadas:
+  - Máximo de **4 disciplinas obrigatórias** ativas;
+  - Máximo de **2 disciplinas optativas** ativas;
+  - Teto de **60 alunos** por disciplina;
+  - Bloqueio de duplicidade na mesma disciplina;
+  - Período de matrícula obrigatoriamente aberto.
+- **UC06 - Cancelar Matrícula**: Liberação imediata de vaga na turma durante o período aberto.
+- **UC07 - Consultar Alunos Matriculados**: Visualização exclusiva de turmas e alunos sob a responsabilidade de cada docente.
+- **UC08 - Notificar Cobrança**: Integração desacoplada através da interface `ServicoNotificacaoCobranca` e da classe `SistemaCobrancaAdapter`.
+- **UC09 - Processamento de Fechamento**: Ao final do período, turmas com menos de 3 alunos são canceladas automaticamente; turmas entre 3 e 60 tornam-se ativas.
+- **Persistência em Arquivos**:
+  - Armazenamento em arquivo binário serializado (`data/sistema.dat`);
+  - Geração de relatório/espelho legível em texto (`data/relatorio_sistema.txt`).
+
+### 2. Credenciais de Teste / Demonstração
+O protótipo já inicializa com uma base de demonstração rica pronta para validação:
+
+| Perfil | Nome | Login | Senha | Identificador |
+| :--- | :--- | :--- | :--- | :--- |
+| **Secretaria** | Secretaria Acadêmica | `admin` | `admin123` | Setor Acadêmico |
+| **Professor** | Prof. Dr. Roberto Souza | `prof1` | `123` | Reg: `P001` |
+| **Professor** | Profa. Dra. Ana Paula | `prof2` | `123` | Reg: `P002` |
+| **Aluno** | Caio Santos | `aluno1` | `123` | Mat: `20260001` |
+| **Aluno** | Anthony Santos | `aluno2` | `123` | Mat: `20260002` |
+| **Aluno** | Pedro Queiroz | `aluno3` | `123` | Mat: `20260003` |
+| **Aluno** | Maria Silva | `aluno4` | `123` | Mat: `20260004` |
+
+### 3. Como Executar
+
+#### Opção A: Via Scripts Facilitadores (Recomendado)
+```bash
+# 1. Compilar o projeto
+./compilar.sh
+
+# 2. Executar os testes automatizados (42 verificações cobrindo UC01 a UC09)
+./testar.sh
+
+# 3. Executar o sistema interativo em linha de comando (CLI)
+./executar.sh
+```
+
+#### Opção B: Via Maven Padrão
+```bash
+# Compilar
+mvn compile
+
+# Executar a aplicação CLI
+mvn exec:java
+```
+
+

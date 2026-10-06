@@ -1,0 +1,33 @@
+===============================================================
+        RELATÓRIO DO SISTEMA DE MATRÍCULAS (ESPELHO)
+===============================================================
+
+--- CURSOS CADASTRADOS (2) ---
+ID: 1 | Nome: Engenharia de Software | Total Créditos: 200
+ID: 2 | Nome: Ciência da Computação | Total Créditos: 210
+
+--- DISCIPLINAS CADASTRADAS (6) ---
+Código: ES101 | Nome: Projeto de Software | Créditos: 4 | Status: ABERTA | Inscritos: 3/60 | Docente: Prof. Dr. Roberto Souza
+Código: ES102 | Nome: Algoritmos e Estruturas de Dados | Créditos: 4 | Status: ABERTA | Inscritos: 2/60 | Docente: Profa. Dra. Ana Paula
+Código: ES103 | Nome: Engenharia de Requisitos | Créditos: 4 | Status: ABERTA | Inscritos: 0/60 | Docente: Prof. Dr. Roberto Souza
+Código: ES104 | Nome: Testes e Qualidade de Software | Créditos: 4 | Status: ABERTA | Inscritos: 0/60 | Docente: Profa. Dra. Ana Paula
+Código: OPT01 | Nome: Tópicos em Inteligência Artificial | Créditos: 2 | Status: ABERTA | Inscritos: 0/60 | Docente: Sem professor
+Código: OPT02 | Nome: Empreendedorismo Tecnológico | Créditos: 2 | Status: ABERTA | Inscritos: 1/60 | Docente: Sem professor
+
+--- ALUNOS CADASTRADOS (4) ---
+Matrícula: 20260001 | Nome: Caio Santos | E-mail: caio@email.com | Obrigatórias: 2/4 | Optativas: 1/2
+   -> Projeto de Software (ES101) [OBRIGATORIA em 05/10/2026 21:32]
+   -> Algoritmos e Estruturas de Dados (ES102) [OBRIGATORIA em 05/10/2026 21:32]
+   -> Empreendedorismo Tecnológico (OPT02) [OPTATIVA em 05/10/2026 21:32]
+Matrícula: 20260002 | Nome: Anthony Santos | E-mail: anthony@email.com | Obrigatórias: 2/4 | Optativas: 0/2
+   -> Projeto de Software (ES101) [OBRIGATORIA em 05/10/2026 21:32]
+   -> Algoritmos e Estruturas de Dados (ES102) [OBRIGATORIA em 05/10/2026 21:32]
+Matrícula: 20260003 | Nome: Pedro Queiroz | E-mail: pedro@email.com | Obrigatórias: 1/4 | Optativas: 0/2
+   -> Projeto de Software (ES101) [OBRIGATORIA em 05/10/2026 21:37]
+Matrícula: 20260004 | Nome: Maria Silva | E-mail: maria@email.com | Obrigatórias: 0/4 | Optativas: 0/2
+
+--- PROFESSORES CADASTRADOS (2) ---
+Registro: P001 | Nome: Prof. Dr. Roberto Souza | E-mail: roberto@pucminas.br | Qtd Disciplinas: 2
+Registro: P002 | Nome: Profa. Dra. Ana Paula | E-mail: anapaula@pucminas.br | Qtd Disciplinas: 2
+
+--- CURRÍCULO ATUAL: 1º/2026 (Período: ABERTO) ---

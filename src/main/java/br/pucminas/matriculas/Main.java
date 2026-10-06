@@ -1,7 +1,12 @@
-package main.java.br.pucminas.matriculas;
-import main.java.br.pucminas.matriculas.model.*;
-import main.java.br.pucminas.matriculas.persistence.FileManager;
+package br.pucminas.matriculas;
 
+import br.pucminas.matriculas.model.BancoDeDados;
+import br.pucminas.matriculas.persistence.FileManager;
+import br.pucminas.matriculas.ui.MenuPrincipal;
+
+/**
+ * Ponto de entrada da aplicação Sistema de Matrículas Universitárias.
+ */
 public class Main {
     public static void main(String[] args) {
         FileManager fileManager = new FileManager("data/sistema.dat");

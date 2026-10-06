@@ -1,0 +1,7 @@
+target/
+bin/
+*.class
+*.dat
+.DS_Store
+*.log
+
